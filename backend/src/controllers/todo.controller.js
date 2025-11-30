@@ -14,10 +14,6 @@ const getAllTodo = asyncHandler(async (req, res) => {
     query = "",
   } = req.query;
 
-  if (!query) {
-    throw new apiError(400, "Invalid request");
-  }
-
   if (!req.user) {
     throw new apiError(400, "User not found");
   }
@@ -167,8 +163,8 @@ const getTodoById = asyncHandler(async (req, res) => {
   const todo = await Todo.aggregate([
     {
       $match: {
-        _id: mongoose.Types.ObjectId(todoId),
-        owner: mongoose.Types.ObjectId(req.user._id),
+        _id: new mongoose.Types.ObjectId(todoId),
+        owner: new mongoose.Types.ObjectId(req.user._id),
       },
     },
     {
