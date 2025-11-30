@@ -3,23 +3,26 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
 const todoSchema = new Schema(
   {
+    title: {
+      type: String,
+      required: true,
+    },
     content: {
       type: String,
       required: true,
     },
-    completed: {
+    isCompleted: {
       type: Boolean,
-      required: true,
+      default: false,
     },
-    user: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
     dueDate: {
       type: Date,
-      required: true,
     },
-    subTodos: [{ type: Schema.Types.ObjectId, ref: "SubTodo" }],
+    subTodo: [{ type: Schema.Types.ObjectId, ref: "SubTodo" }],
   },
   { timestamps: true }
 );

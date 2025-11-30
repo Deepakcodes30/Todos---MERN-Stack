@@ -7,9 +7,13 @@ const subTodoSchema = new Schema(
       type: String,
       required: true,
     },
-    completed: {
+    isCompleted: {
       type: Boolean,
-      required: true,
+      default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   { timestamps: true }
