@@ -272,25 +272,38 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new apiError(400, "Avatar not found");
   }
 
-  const avatar = await uploadOnCloudinary(avatarLocalPath);
+  const newAvatar = await uploadOnCloudinary(avatarLocalPath);
 
-  if (!avatar.url) {
-    throw new apiError(401, "avatar not found");
+  if (!newAvatar.url) {
+    throw new apiError(500, "Error uploading avatar");
   }
 
-  const user = await User.findByIdAndUpdate(
-    req.user?._id,
-    {
-      $set: {
-        avatar: avatar.url,
-      },
-    },
-    { new: true }
-  ).select("-password -refreshToken");
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new apiError(400, "User not found");
+  }
+
+  if (user.avatar?.url) {
+    await deleteFromCloudinary(user.avatar.url);
+  }
+
+  user.avatar = { avatar: newAvatar.url };
+  const updatedUser = await user.save().select("-password -refreshToken");
+
+  // const updatedUser = await User.findByIdAndUpdate(
+  //   req.user?._id,
+  //   {
+  //     $set: {
+  //       avatar: newAvatar.url,
+  //     },
+  //   },
+  //   { new: true }
+  // ).select("-password -refreshToken");
 
   return res
     .status(200)
-    .json(new apiResponse(200, user, "Avatar updated successfully"));
+    .json(new apiResponse(200, updatedUser, "Avatar updated successfully"));
 });
 
 export {
