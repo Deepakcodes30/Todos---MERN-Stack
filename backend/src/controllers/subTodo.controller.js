@@ -208,4 +208,5 @@ export {
   updateSubTodo,
   toggleCompleteStatus,
   deleteSubTodo,
+  getSubTodoById,
 };
