@@ -22,7 +22,9 @@ const SubTodo = ({ subTodo }) => {
       <input
         type="checkbox"
         checked={subTodo.isCompleted}
-        onChange={() => dispatch(toggleCompleteStatus(subTodo._id))}
+        onChange={() =>
+          dispatch(toggleCompleteStatus({ subTodoId: subTodo._id }))
+        }
       />
 
       {isEditing ? (
@@ -43,7 +45,8 @@ const SubTodo = ({ subTodo }) => {
         <button onClick={() => setIsEditing(true)}>Edit</button>
       )}
 
-      <button onClick={() => dispatch(deleteSubTodo(subTodo._id))}>
+      <button
+        onClick={() => dispatch(deleteSubTodo({ subTodoId: subTodo._id }))}>
         Delete
       </button>
     </div>

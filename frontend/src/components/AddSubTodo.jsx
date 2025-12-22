@@ -35,7 +35,7 @@ const AddSubTodo = () => {
     <div ref={wrapperRef}>
       <input
         type="text"
-        placeholder="Add a Todo.."
+        placeholder="Add a SubTodo.."
         value={title}
         onChange={(e) => setContent(e.target.value)}
         onFocus={() => setIsFocused(true)}
