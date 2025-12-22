@@ -1,12 +1,12 @@
 import "./App.css";
 import Header from "./components/Header.jsx";
-import SubTodo from "./components/SubTodo.jsx";
+import TodosContainer from "./components/TodosContainer.jsx";
 
 function App() {
   return (
     <div>
       <Header />
-      <SubTodo />
+      <TodosContainer />
     </div>
   );
 }

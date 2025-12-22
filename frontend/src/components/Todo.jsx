@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import AddSubTodo from "./AddSubTodo.jsx";
+import SubTodo from "./SubTodo.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import {
   updateTodo,
   toggleCompleteStatus,
   deleteTodo,
-  getTodoById,
 } from "../store/todoSlice.js";
 
 const Todo = ({ todo }) => {
@@ -61,7 +61,7 @@ const Todo = ({ todo }) => {
         <ul>
           {todoSubTodos.map((subTodo) => {
             <li key={subTodo._id}>
-              <subTodo subTodo={subTodo} />
+              <SubTodo subTodo={subTodo} />
             </li>;
           })}
         </ul>
