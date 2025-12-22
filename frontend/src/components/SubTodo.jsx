@@ -9,7 +9,7 @@ import {
 const SubTodo = ({ subTodo }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(subTodo.content);
+  const [editedContent, setEditedContent] = useState(subTodo?.content || "");
 
   const handleSave = () => {
     if (!editedContent.trim()) return;
