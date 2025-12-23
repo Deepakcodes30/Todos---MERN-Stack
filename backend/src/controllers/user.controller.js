@@ -12,14 +12,21 @@ import mongoose from "mongoose";
 const generateAccessAndRefreshToken = async (userId) => {
   try {
     const user = await User.findById(userId);
+
+    if (!user) {
+      throw new apiError(400, "User not found while generating tokens");
+    }
     const accessToken = user.generateAccessToken();
+
     const refreshToken = user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-
+    console.log("ACCESS SECRET:", process.env.ACCESS_TOKEN_SECRET);
+    console.log("REFRESH SECRET:", process.env.REFRESH_TOKEN_SECRET);
     return { accessToken, refreshToken };
   } catch (error) {
+    console.error("TOKEN GENERATION ERROR:", error);
     throw new apiError(500, "Something went wrong");
   }
 };
@@ -34,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   const existedUser = await User.findOne({
-    $or: [{ email }, { password }],
+    $or: [{ email }, { username }],
   });
 
   if (existedUser) {
@@ -102,6 +109,10 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(400, "Username or email is required");
   }
 
+  if (!password) {
+    throw new apiError(400, "Password is required");
+  }
+
   const user = await User.findOne({
     $or: [{ username }, { email }],
   });
@@ -110,7 +121,7 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new apiError(400, "Invalid User");
   }
 
-  const isPasswordValid = await User.isPasswordCorrect(password);
+  const isPasswordValid = await user.isPasswordCorrect(password);
   if (!isPasswordValid) {
     throw new apiError(401, "password incorrect");
   }
@@ -136,7 +147,7 @@ const loginUser = asyncHandler(async (req, res) => {
       new apiResponse(
         200,
         {
-          loggedInUser,
+          user: loggedInUser,
           accessToken,
           refreshToken,
         },
@@ -146,7 +157,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  User.findByIdAndUpdate(
+  await User.findByIdAndUpdate(
     req.user._id,
     {
       $unset: {
@@ -195,6 +206,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     const options = {
       httpOnly: true,
       secure: true,
+      sameSite: "strict",
     };
 
     const { newRefreshToken, accessToken } =
@@ -251,8 +263,8 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
     {
       $set: {
         fullName: fullName,
-        email: email,
-        username: username,
+        email: email.toLowerCase(),
+        username: username.toLowerCase(),
       },
     },
     {
@@ -285,11 +297,14 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
   }
 
   if (user.avatar?.url) {
-    await deleteFromCloudinary(user.avatar.url);
+    await deleteFromCloudinary(user.avatar);
   }
 
-  user.avatar = { avatar: newAvatar.url };
-  const updatedUser = await user.save().select("-password -refreshToken");
+  user.avatar = newAvatar.url;
+  await user.save();
+  const updatedUser = await User.findById(user._id).select(
+    "-password -refreshToken"
+  );
 
   // const updatedUser = await User.findByIdAndUpdate(
   //   req.user?._id,

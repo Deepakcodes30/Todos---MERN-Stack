@@ -43,12 +43,11 @@ const userSchema = new Schema(
 );
 
 //this is the encrypt the password before saving the password in database
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
-    return next();
+    return;
   } else {
     this.password = await bcrypt.hash(this.password, 10);
-    next();
   }
 });
 

@@ -8,6 +8,10 @@ import { User } from "../models/user.model.js";
 export const verifyJWT = asyncHandler(async (req, res, next) => {
   //basically we are accessing the accessToken from either cookies where we added the tokens or from http header which holds a value called Authorization which holds Bearer <accesstoken> in which we are replacing the Bearer term with empty string so that we are left with just the accessToken
   try {
+    // console.log("==== VERIFY JWT DEBUG ====");
+    // console.log("Cookies:", req.cookies);
+    // console.log("Authorization Header:", req.headers.authorization);
+    // console.log("==========================");
     const token =
       req.cookies?.accessToken ||
       req.header("Authorization")?.replace("Bearer ", "");
