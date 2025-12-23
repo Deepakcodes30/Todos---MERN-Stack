@@ -17,9 +17,9 @@ router.use(verifyJWT);
 
 router.route("/get-all-todo").get(getAllTodo);
 router.route("/create-todo").post(createTodo);
-router.route("/update-todo").patch(updateTodo);
-router.route("/toggle-complete-status").patch(toggleCompleteStatus);
-router.route("/delete-todo").delete(deleteTodo);
-router.route("/get-current-todo").get(getTodoById);
+router.route("/update-todo/:todoId").patch(updateTodo);
+router.route("/toggle-complete-status/:todoId").patch(toggleCompleteStatus);
+router.route("/delete-todo/:todoId").delete(deleteTodo);
+router.route("/get-current-todo/:todoId").get(getTodoById);
 
 export default router;
