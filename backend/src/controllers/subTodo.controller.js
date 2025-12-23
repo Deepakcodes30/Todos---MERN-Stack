@@ -1,4 +1,5 @@
 import { SubTodo } from "../models/subTodo.model.js";
+import { Todo } from "../models/todo.model.js";
 import { apiError } from "../utils/apiError.js";
 import { apiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -13,6 +14,12 @@ const getAllSubTodo = asyncHandler(async (req, res) => {
     sortType = "desc",
   } = req.query;
 
+  const { todoId } = req.params;
+
+  if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new apiError(400, "Todo not found");
+  }
+
   if (!req.user) {
     throw new apiError(400, "User not found");
   }
@@ -21,14 +28,17 @@ const getAllSubTodo = asyncHandler(async (req, res) => {
   const limitNum = parseInt(limit);
   const skip = (pageNum - 1) * limitNum;
 
-  const subTodo = await SubTodo.findById({ owner: req.user._id })
+  const subTodo = await SubTodo.find({ owner: req.user._id, todo: todoId })
     .sort({
       [sortBy]: sortType === "asc" ? 1 : -1,
     })
     .skip(skip)
     .limit(limitNum);
 
-  const totalSubTodo = await SubTodo.countDocuments({ owner: req.user._id });
+  const totalSubTodo = await SubTodo.countDocuments({
+    owner: req.user._id,
+    todo: todoId,
+  });
 
   return res.status(200).json(
     new apiResponse(
@@ -49,6 +59,11 @@ const getAllSubTodo = asyncHandler(async (req, res) => {
 
 const createSubTodo = asyncHandler(async (req, res) => {
   const { content } = req.body;
+  const { todoId } = req.params;
+
+  if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new apiError(400, "Invalid Todo");
+  }
 
   if (!content) {
     throw new apiError(400, "Please enter all fields");
@@ -57,9 +72,15 @@ const createSubTodo = asyncHandler(async (req, res) => {
     throw new apiError(400, "User not found");
   }
 
+  const parentTodo = await Todo.findOne({ _id: todoId, owner: req.user._id });
+  if (!parentTodo) {
+    throw new apiError(400, "Todo not created");
+  }
+
   const subTodo = await SubTodo.create({
     content,
     owner: req.user._id,
+    todo: todoId,
   });
 
   if (!subTodo) {
@@ -73,13 +94,25 @@ const createSubTodo = asyncHandler(async (req, res) => {
 
 const updateSubTodo = asyncHandler(async (req, res) => {
   const { content } = req.body;
-  const { subTodoId } = req.params;
+  const { subTodoId, todoId } = req.params;
+
+  if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new apiError(400, "Todo not found");
+  }
+
+  if (!subTodoId || !mongoose.Types.ObjectId.isValid(subTodoId)) {
+    throw new apiError(400, "SubTodo not found");
+  }
 
   if (!content) {
     throw new apiError(400, "Please enter all fields");
   }
 
-  const subTodo = await SubTodo.findById(subTodoId);
+  const subTodo = await SubTodo.findById({
+    _id: subTodoId,
+    owner: req.user._id,
+    todo: todoId,
+  });
 
   if (!subTodo) {
     throw new apiError(400, "subTodo not found");
@@ -103,13 +136,21 @@ const updateSubTodo = asyncHandler(async (req, res) => {
 });
 
 const toggleCompleteStatus = asyncHandler(async (req, res) => {
-  const { subTodoId } = req.params;
+  const { subTodoId, todoId } = req.params;
+
+  if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new apiError(400, "Todo is not found");
+  }
 
   if (!subTodoId || !mongoose.Types.ObjectId.isValid(subTodoId)) {
     throw new apiError(400, "SubTodo is not found");
   }
 
-  const subTodo = await SubTodo.findById(subTodoId);
+  const subTodo = await SubTodo.findById({
+    _id: subTodoId,
+    owner: req.user._id,
+    todo: todoId,
+  });
 
   if (!subTodo) {
     throw new apiError(400, "SubTodo not found");
@@ -126,13 +167,21 @@ const toggleCompleteStatus = asyncHandler(async (req, res) => {
 });
 
 const deleteSubTodo = asyncHandler(async (req, res) => {
-  const { subTodoId } = req.params;
+  const { subTodoId, todoId } = req.params;
+
+  if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new apiError(400, "Todo is not found");
+  }
 
   if (!subTodoId || !mongoose.Types.ObjectId.isValid(subTodoId)) {
     throw new apiError(400, "SubTodo is not found");
   }
 
-  const subTodo = await SubTodo.findById(subTodoId);
+  const subTodo = await SubTodo.findById({
+    _id: subTodoId,
+    owner: req.user._id,
+    todo: todoId,
+  });
 
   if (!subTodo) {
     throw new apiError(400, "SubTodo not found");
@@ -148,7 +197,11 @@ const deleteSubTodo = asyncHandler(async (req, res) => {
 });
 
 const getSubTodoById = asyncHandler(async (req, res) => {
-  const { subTodoId } = req.params;
+  const { subTodoId, todoId } = req.params;
+
+  if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
+    throw new apiError(400, "Invalid Todo Id");
+  }
 
   if (!subTodoId || !mongoose.Types.ObjectId.isValid(subTodoId)) {
     throw new apiError(400, "Invalid subTodo Id");
@@ -159,6 +212,7 @@ const getSubTodoById = asyncHandler(async (req, res) => {
       $match: {
         _id: new mongoose.Types.ObjectId(subTodoId),
         owner: new mongoose.Types.ObjectId(req.user._id),
+        todo: new mongoose.Types.ObjectId(todoId),
       },
     },
     {
