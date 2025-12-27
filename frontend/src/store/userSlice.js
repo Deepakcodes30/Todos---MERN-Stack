@@ -7,13 +7,12 @@ export const registerUser = createAsyncThunk(
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL_USER}/register`,
+        formData,
+
         {
-          fullName,
-          username,
-          password,
-          email,
-        },
-        { withCredentials: true }
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
       console.log(res.data.data); //to check the response
       return res.data.data;
@@ -144,6 +143,7 @@ export const updateUserAvatar = createAsyncThunk(
 
 const initialState = {
   user: null,
+  status: false,
   loading: false,
   error: null,
   isPasswordChanged: false,

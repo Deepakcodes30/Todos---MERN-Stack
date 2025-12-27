@@ -1,0 +1,70 @@
+import { useNavigate, Link } from "react-router-dom";
+import { registerUser } from "../store/userSlice.js";
+import Input from "./Input.jsx";
+import Button from "./Button.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+
+function Register() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { register, handleSubmit } = useForm();
+  const { user, loading, error } = useSelector((state) => state.user);
+
+  const onSubmit = (data) => {
+    const formData = new FormData();
+
+    formData.append("fullName", data.fullName);
+    formData.append("email", data.email);
+    formData.append("username", data.username);
+    formData.append("password", data.password);
+
+    // avatar is an array (FileList)
+    if (data.avatar?.[0]) {
+      formData.append("avatar", data.avatar[0]);
+    }
+
+    dispatch(registerUser(formData));
+  };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [navigate, user]);
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Input label="FullName" {...register("fullName", { required: true })} />
+        <Input
+          label="Email"
+          type="email"
+          {...register("email", { required: true })}
+        />
+        <Input label="Username" {...register("username", { required: true })} />
+        <Input
+          label="Avatar"
+          type="file"
+          accept="image/*"
+          {...register("avatar")}
+        />
+        <Input
+          label="Password"
+          type="password"
+          {...register("password", { required: true })}
+        />
+        {error && <p className="error">{error}</p>}
+        <Button type="submit" disabled={loading}>
+          {loading ? "Registering user..." : "Register"}
+        </Button>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </form>
+    </>
+  );
+}
+
+export default Register;
