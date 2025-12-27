@@ -32,7 +32,7 @@ const Todo = ({ todo }) => {
         <input
           type="checkbox"
           checked={todo.isCompleted}
-          onChange={() => dispatch(toggleCompleteStatus({ todoId: todo._id }))}
+          onChange={() => dispatch(toggleCompleteStatus(todo._id))}
         />
         {isEditing ? (
           <input
@@ -49,20 +49,26 @@ const Todo = ({ todo }) => {
         {isEditing ? (
           <button onClick={handleSave}>Save</button>
         ) : (
-          <button onClick={() => setIsEditing(true)}>edit</button>
+          <button
+            onClick={() => {
+              setIsEditing(true);
+              setEditedTitle(todo.title);
+            }}>
+            edit
+          </button>
         )}
 
-        <button onClick={() => dispatch(deleteTodo({ todoId: todo._id }))}>
-          Delete
-        </button>
+        <button onClick={() => dispatch(deleteTodo(todo._id))}>Delete</button>
       </div>
       <AddSubTodo />
       <div>
         <ul>
           {todoSubTodos.map((subTodo) => {
-            <li key={subTodo._id}>
-              <SubTodo subTodo={subTodo} />
-            </li>;
+            return (
+              <li key={subTodo._id}>
+                <SubTodo subTodo={subTodo} />
+              </li>
+            );
           })}
         </ul>
       </div>

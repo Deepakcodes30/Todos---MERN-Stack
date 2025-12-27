@@ -141,6 +141,7 @@ export const todoSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllTodo.fulfilled, (state, action) => {
+        console.log("GET ALL TODO PAYLOAD 👉", action.payload);
         state.loading = false;
         state.error = null;
         state.todos = action.payload.todos;
