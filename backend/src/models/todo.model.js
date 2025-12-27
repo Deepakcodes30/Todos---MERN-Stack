@@ -7,10 +7,6 @@ const todoSchema = new Schema(
       type: String,
       required: true,
     },
-    content: {
-      type: String,
-      required: true,
-    },
     isCompleted: {
       type: Boolean,
       default: false,

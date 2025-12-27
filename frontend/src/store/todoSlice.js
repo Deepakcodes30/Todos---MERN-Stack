@@ -32,13 +32,12 @@ export const getAllTodo = createAsyncThunk(
 
 export const createTodo = createAsyncThunk(
   "todo/create-todo",
-  async ({ title, content, dueDate }, { rejectWithValue }) => {
+  async ({ title, dueDate }, { rejectWithValue }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL_TODO}/create-todo`,
         {
           title,
-          content,
           dueDate,
         },
         { withCredentials: true }

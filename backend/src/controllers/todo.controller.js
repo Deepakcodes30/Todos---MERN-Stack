@@ -58,15 +58,14 @@ const getAllTodo = asyncHandler(async (req, res) => {
 });
 
 const createTodo = asyncHandler(async (req, res) => {
-  const { title, content, dueDate } = req.body;
+  const { title, dueDate } = req.body;
 
-  if (!title || !content) {
+  if (!title) {
     throw new apiError(400, "Please enter all details");
   }
 
   const todo = await Todo.create({
     title,
-    content,
     dueDate,
     owner: req.user._id,
   });
@@ -81,7 +80,7 @@ const createTodo = asyncHandler(async (req, res) => {
 });
 
 const updateTodo = asyncHandler(async (req, res) => {
-  const { title, content, dueDate } = req.body;
+  const { title, dueDate } = req.body;
   const { todoId } = req.params;
 
   if (!todoId || !mongoose.Types.ObjectId.isValid(todoId)) {
@@ -97,7 +96,6 @@ const updateTodo = asyncHandler(async (req, res) => {
   await ownershipCheck(todo.owner, req.user._id);
 
   todo.title = title || todo.title;
-  todo.content = content || todo.content;
   todo.dueDate = dueDate || todo.dueDate;
 
   const updatedTodo = await todo.save();
@@ -211,7 +209,6 @@ const getTodoById = asyncHandler(async (req, res) => {
     {
       $project: {
         title: 1,
-        content: 1,
         isCompleted: 1,
         owner: 1,
         dueDate: 1,

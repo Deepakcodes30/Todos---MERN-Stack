@@ -136,7 +136,8 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production", // only secure in prod
+    sameSite: "lax", // helps with cross-origin
   };
 
   return res
@@ -169,7 +170,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 
   const options = {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production", // only secure in prod
+    sameSite: "lax", // helps with cross-origin
   };
 
   return res
@@ -205,8 +207,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
     const options = {
       httpOnly: true,
-      secure: true,
-      sameSite: "strict",
+      secure: process.env.NODE_ENV === "production", // only secure in prod
+      sameSite: "lax", // helps with cross-origin
     };
 
     const { newRefreshToken, accessToken } =

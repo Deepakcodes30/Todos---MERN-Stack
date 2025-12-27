@@ -3,12 +3,11 @@ import axios from "axios";
 
 export const registerUser = createAsyncThunk(
   "users/register",
-  async ({ fullName, username, password, email }, { rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL_USER}/register`,
         formData,
-
         {
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },

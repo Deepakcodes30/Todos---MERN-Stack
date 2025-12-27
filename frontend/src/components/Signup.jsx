@@ -9,7 +9,7 @@ import { useEffect } from "react";
 function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const { user, loading, error } = useSelector((state) => state.user);
 
   const onSubmit = (data) => {
@@ -22,7 +22,12 @@ function Signup() {
 
     // avatar is an array (FileList)
     if (data.avatar?.[0]) {
-      formData.append("avatar", data.avatar[0]);
+      const file = data.avatar[0];
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Avatar must be less than 2MB");
+        return;
+      }
+      formData.append("avatar", file);
     }
 
     dispatch(registerUser(formData));
@@ -30,6 +35,7 @@ function Signup() {
 
   useEffect(() => {
     if (user) {
+      reset();
       navigate("/home");
     }
   }, [navigate, user]);
