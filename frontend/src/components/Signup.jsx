@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 
-function Register() {
+function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
@@ -67,4 +67,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Signup;

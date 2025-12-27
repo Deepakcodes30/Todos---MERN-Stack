@@ -166,6 +166,7 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.user = action.payload;
+        state.status = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
@@ -181,6 +182,7 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.user = action.payload;
+        state.status = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -199,6 +201,7 @@ export const userSlice = createSlice({
         state.isPasswordChanged = false;
         state.isAccountUpdated = false;
         state.isAvatarUpdated = false;
+        state.status = false;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.loading = false;
@@ -229,6 +232,7 @@ export const userSlice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
+        state.status = true;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.loading = false;
