@@ -1,18 +1,13 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Todo from "./Todo.jsx";
-import { getAllTodo } from "../store/todoSlice.js";
 
 const TodosContainer = () => {
-  const todos = useSelector((state) => {
-    console.log("REDUX TODOS 👉", state.todo.todos);
-    state.todo.todos;
-  });
-  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todo.todos);
 
-  useEffect(() => {
-    dispatch(getAllTodo({ page: 1 }));
-  }, [dispatch]);
+  console.log("todos fetched", todos);
+  if (!todos || todos.length === 0) {
+    return <p>No todos found</p>;
+  }
 
   return (
     <div>

@@ -7,13 +7,13 @@ import { useSelector } from "react-redux";
 
 function Home() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
 
   useEffect(() => {
-    if (user) {
-      dispatch(getAllTodo());
+    if (user && todos.length === 0) {
+      dispatch(getAllTodo({ page: 1 }));
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, todos.length]);
   return (
     <div>
       <AddTodo />
