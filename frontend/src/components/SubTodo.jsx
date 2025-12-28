@@ -6,14 +6,16 @@ import {
   deleteSubTodo,
 } from "../store/subTodoSlice";
 
-const SubTodo = ({ subTodo }) => {
+const SubTodo = ({ subTodo, todoId }) => {
   const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(subTodo?.content || "");
 
   const handleSave = () => {
     if (!editedContent.trim()) return;
-    dispatch(updateSubTodo({ subTodoId: subTodo._id, content: editedContent }));
+    dispatch(
+      updateSubTodo({ todoId, subTodoId: subTodo._id, content: editedContent })
+    );
     setIsEditing(false);
   };
 
@@ -23,7 +25,7 @@ const SubTodo = ({ subTodo }) => {
         type="checkbox"
         checked={subTodo.isCompleted}
         onChange={() =>
-          dispatch(toggleCompleteStatus({ subTodoId: subTodo._id }))
+          dispatch(toggleCompleteStatus({ todoId, subTodoId: subTodo._id }))
         }
       />
 
@@ -46,7 +48,9 @@ const SubTodo = ({ subTodo }) => {
       )}
 
       <button
-        onClick={() => dispatch(deleteSubTodo({ subTodoId: subTodo._id }))}>
+        onClick={() =>
+          dispatch(deleteSubTodo({ todoId, subTodoId: subTodo._id }))
+        }>
         Delete
       </button>
     </div>

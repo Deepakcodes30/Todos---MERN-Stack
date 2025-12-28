@@ -4,7 +4,8 @@ import Todo from "./Todo.jsx";
 const TodosContainer = () => {
   const todos = useSelector((state) => state.todo.todos);
 
-  console.log("todos fetched", todos);
+  // console.log("todos fetched", todos);
+
   if (!todos || todos.length === 0) {
     return <p>No todos found</p>;
   }

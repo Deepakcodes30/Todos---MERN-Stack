@@ -53,7 +53,7 @@ export const updateTodo = createAsyncThunk(
   "todo/update-todo",
   async ({ todoId, title, content, dueDate }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(
+      const res = await axios.patch(
         `${import.meta.env.VITE_BASE_URL_TODO}/update-todo/${todoId}`,
         { title, content, dueDate },
         { withCredentials: true }
@@ -141,7 +141,7 @@ export const todoSlice = createSlice({
         state.error = null;
       })
       .addCase(getAllTodo.fulfilled, (state, action) => {
-        console.log("GET ALL TODO PAYLOAD 👉", action.payload);
+        // console.log("GET ALL TODO PAYLOAD 👉", action.payload);
         state.loading = false;
         state.error = null;
         state.todos = action.payload.todos;

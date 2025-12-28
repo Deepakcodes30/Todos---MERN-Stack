@@ -14,9 +14,7 @@ const Todo = ({ todo }) => {
   const [editedTitle, setEditedTitle] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const todoSubTodos = subTodos.filter((subTodo) =>
-    todo.subTodo.includes(subTodo._id)
-  );
+  const todoSubTodos = subTodos.filter((subTodo) => subTodo.todo === todo._id);
 
   const handleSave = () => {
     if (!editedTitle.trim()) {
@@ -46,6 +44,18 @@ const Todo = ({ todo }) => {
           </div>
         )}
 
+        {/* Due date */}
+        {todo.dueDate && !isEditing && (
+          <span
+            className={`text-sm whitespace-nowrap ${
+              new Date(todo.dueDate) < new Date() && !todo.isCompleted
+                ? "text-red-500 font-semibold"
+                : "text-gray-500"
+            }`}>
+            {new Date(todo.dueDate).toLocaleDateString()}
+          </span>
+        )}
+
         {isEditing ? (
           <button onClick={handleSave}>Save</button>
         ) : (
@@ -60,13 +70,13 @@ const Todo = ({ todo }) => {
 
         <button onClick={() => dispatch(deleteTodo(todo._id))}>Delete</button>
       </div>
-      <AddSubTodo />
+      <AddSubTodo todoId={todo._id} />
       <div>
         <ul>
           {todoSubTodos.map((subTodo) => {
             return (
               <li key={subTodo._id}>
-                <SubTodo subTodo={subTodo} />
+                <SubTodo subTodo={subTodo} todoId={todo._id} />
               </li>
             );
           })}

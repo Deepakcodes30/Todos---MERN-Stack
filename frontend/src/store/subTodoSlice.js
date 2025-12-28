@@ -6,18 +6,21 @@ import axios from "axios";
 export const getAllSubTodo = createAsyncThunk(
   "/subTodo/get-all-subTodo",
   async (
-    { page = 1, limit = 10, sortBy = "createdAt", sortType = "desc" },
+    { todoId, page = 1, limit = 10, sortBy = "createdAt", sortType = "desc" },
     { rejectWithValue }
   ) => {
     try {
       const res = await axios.get(
         `${
           import.meta.env.VITE_BASE_URL_SUBTODO
-        }/get-all-subTodo?page=${page}&limit=${limit}&sortBy=${sortBy}&sortType=${sortType}`,
+        }/${todoId}/get-all-subTodo?page=${page}&limit=${limit}&sortBy=${sortBy}&sortType=${sortType}`,
         { withCredentials: true }
       );
 
-      return res.data.data;
+      return {
+        todoId,
+        subTodos: res.data.data.subTodo,
+      };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -26,15 +29,15 @@ export const getAllSubTodo = createAsyncThunk(
 
 export const createSubTodo = createAsyncThunk(
   "subTodo/create-subTodo",
-  async ({ content }, { rejectWithValue }) => {
+  async ({ todoId, content }, { rejectWithValue }) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_BASE_URL_SUBTODO}/create-subTodo`,
+        `${import.meta.env.VITE_BASE_URL_SUBTODO}/${todoId}/create-subTodo`,
         { content },
         { withCredentials: true }
       );
 
-      return res.data.data;
+      return { todoId, subTodo: res.data.data };
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
@@ -43,10 +46,12 @@ export const createSubTodo = createAsyncThunk(
 
 export const updateSubTodo = createAsyncThunk(
   "subTodo/update-subTodo",
-  async ({ subTodoId, content }, { rejectWithValue }) => {
+  async ({ todoId, subTodoId, content }, { rejectWithValue }) => {
     try {
-      const res = await axios.put(
-        `${import.meta.env.VITE_BASE_URL_SUBTODO}/update-subTodo/${subTodoId}`,
+      const res = await axios.patch(
+        `${
+          import.meta.env.VITE_BASE_URL_SUBTODO
+        }/${todoId}/${subTodoId}/update-subTodo`,
         { content },
         { withCredentials: true }
       );
@@ -59,12 +64,12 @@ export const updateSubTodo = createAsyncThunk(
 
 export const toggleCompleteStatus = createAsyncThunk(
   "subTodo/toggle-complete-status",
-  async (subTodoId, { rejectWithValue }) => {
+  async ({ todoId, subTodoId }, { rejectWithValue }) => {
     try {
       const res = await axios.patch(
         `${
           import.meta.env.VITE_BASE_URL_SUBTODO
-        }/toggle-complete-status/${subTodoId}`,
+        }/${todoId}/${subTodoId}/toggle-complete-status`,
         {},
         { withCredentials: true }
       );
@@ -78,10 +83,12 @@ export const toggleCompleteStatus = createAsyncThunk(
 
 export const deleteSubTodo = createAsyncThunk(
   "subTodo/delete-subTodo",
-  async (subTodoId, { rejectWithValue }) => {
+  async ({ todoId, subTodoId }, { rejectWithValue }) => {
     try {
       await axios.delete(
-        `${import.meta.env.VITE_BASE_URL_SUBTODO}/delete-subTodo/${subTodoId}`,
+        `${
+          import.meta.env.VITE_BASE_URL_SUBTODO
+        }/${todoId}/${subTodoId}/delete-subTodo`,
         { withCredentials: true }
       );
       return subTodoId;
@@ -93,12 +100,12 @@ export const deleteSubTodo = createAsyncThunk(
 
 export const getSubTodoById = createAsyncThunk(
   "subTodo/get-current-subTodo",
-  async (subTodoId, { rejectWithValue }) => {
+  async ({ todoId, subTodoId }, { rejectWithValue }) => {
     try {
       const res = await axios.get(
         `${
           import.meta.env.VITE_BASE_URL_SUBTODO
-        }/get-current-subTodo/${subTodoId}`,
+        }/${todoId}/${subTodoId}/get-current-subTodo`,
         {
           withCredentials: true,
         }
@@ -139,7 +146,11 @@ export const subTodoSlice = createSlice({
       })
       .addCase(getAllSubTodo.fulfilled, (state, action) => {
         state.loading = false;
-        state.subTodos = action.payload.subTodo;
+        const { todoId, subTodos } = action.payload;
+        state.subTodos = state.subTodos.filter(
+          (subTodo) => subTodo.todo !== todoId
+        );
+        state.subTodos.push(...subTodos);
         state.pagination = action.payload.pagination;
       })
       .addCase(getAllSubTodo.rejected, (state, action) => {
@@ -154,6 +165,10 @@ export const subTodoSlice = createSlice({
       })
       .addCase(createSubTodo.fulfilled, (state, action) => {
         state.loading = false;
+        const { todoId, subTodo } = action.payload;
+        if (!state.subTodos[todoId]) {
+          state.subTodos[todoId] = [];
+        }
         state.subTodos.unshift(action.payload);
       })
       .addCase(createSubTodo.rejected, (state, action) => {

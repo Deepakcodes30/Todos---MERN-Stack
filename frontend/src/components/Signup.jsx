@@ -13,6 +13,16 @@ function Signup() {
   const { user, loading, error } = useSelector((state) => state.user);
 
   const onSubmit = (data) => {
+    if (data.password.length < 8) {
+      alert("Password must be at least 8 characters");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(data.email)) {
+      alert("Please enter a valid email");
+      return;
+    }
+
     const formData = new FormData();
 
     formData.append("fullName", data.fullName);

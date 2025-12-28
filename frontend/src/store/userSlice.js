@@ -13,7 +13,7 @@ export const registerUser = createAsyncThunk(
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log(res.data.data); //to check the response
+      // console.log(res.data.data); //to check the response
       return res.data.data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);

@@ -1,24 +1,32 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { createSubTodo } from "../store/subTodoSlice.js";
+import { createSubTodo, getAllSubTodo } from "../store/subTodoSlice.js";
 
-const AddSubTodo = () => {
+const AddSubTodo = ({ todoId }) => {
   const [content, setContent] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
   const dispatch = useDispatch();
   const wrapperRef = useRef(null);
 
-  const handleSubmit = () => {
-    if (!title.trim()) return;
+  const handleSubmit = async () => {
+    if (!content.trim()) return;
 
-    dispatch(
-      createSubTodo({
-        content,
-      })
-    );
-    setContent("");
-    setIsFocused(false);
+    try {
+      await dispatch(
+        createSubTodo({
+          todoId,
+          content,
+        })
+      ).unwrap();
+
+      dispatch(getAllSubTodo({ todoId, page: 1, limit: 50 }));
+
+      setContent("");
+      setIsFocused(false);
+    } catch (error) {
+      alert(`Failed to create subtodo: ${error}`);
+    }
   };
 
   useEffect(() => {
@@ -36,7 +44,7 @@ const AddSubTodo = () => {
       <input
         type="text"
         placeholder="Add a SubTodo.."
-        value={title}
+        value={content}
         onChange={(e) => setContent(e.target.value)}
         onFocus={() => setIsFocused(true)}
       />
