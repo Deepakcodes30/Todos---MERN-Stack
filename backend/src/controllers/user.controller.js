@@ -22,8 +22,8 @@ const generateAccessAndRefreshToken = async (userId) => {
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
-    console.log("ACCESS SECRET:", process.env.ACCESS_TOKEN_SECRET);
-    console.log("REFRESH SECRET:", process.env.REFRESH_TOKEN_SECRET);
+    // console.log("ACCESS SECRET:", process.env.ACCESS_TOKEN_SECRET);
+    // console.log("REFRESH SECRET:", process.env.REFRESH_TOKEN_SECRET);
     return { accessToken, refreshToken };
   } catch (error) {
     console.error("TOKEN GENERATION ERROR:", error);

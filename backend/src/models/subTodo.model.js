@@ -6,6 +6,7 @@ const subTodoSchema = new Schema(
     content: {
       type: String,
       required: true,
+      maxLength: [500, "Content cannot exceed 500 characters"],
     },
     isCompleted: {
       type: Boolean,

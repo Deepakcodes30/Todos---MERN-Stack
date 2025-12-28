@@ -6,6 +6,7 @@ const todoSchema = new Schema(
     title: {
       type: String,
       required: true,
+      maxLength: [200, "Title cannot exceed 200 characters"],
     },
     isCompleted: {
       type: Boolean,
@@ -17,6 +18,12 @@ const todoSchema = new Schema(
     },
     dueDate: {
       type: Date,
+      validate: {
+        validator: function (v) {
+          return !v || v >= new Date();
+        },
+        message: "Due date cannot be in the past",
+      },
     },
     subTodo: [{ type: Schema.Types.ObjectId, ref: "SubTodo" }],
   },

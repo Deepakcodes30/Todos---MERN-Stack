@@ -83,6 +83,10 @@ const createSubTodo = asyncHandler(async (req, res) => {
     todo: todoId,
   });
 
+  //Update parent todo's subTodo array
+  parentTodo.subTodo.push(subTodo._id);
+  await parentTodo.save();
+
   if (!subTodo) {
     throw new apiError(400, "SubTodo not found");
   }
@@ -108,7 +112,7 @@ const updateSubTodo = asyncHandler(async (req, res) => {
     throw new apiError(400, "Please enter all fields");
   }
 
-  const subTodo = await SubTodo.findById({
+  const subTodo = await SubTodo.findOne({
     _id: subTodoId,
     owner: req.user._id,
     todo: todoId,
@@ -146,7 +150,7 @@ const toggleCompleteStatus = asyncHandler(async (req, res) => {
     throw new apiError(400, "SubTodo is not found");
   }
 
-  const subTodo = await SubTodo.findById({
+  const subTodo = await SubTodo.findOne({
     _id: subTodoId,
     owner: req.user._id,
     todo: todoId,
@@ -177,7 +181,7 @@ const deleteSubTodo = asyncHandler(async (req, res) => {
     throw new apiError(400, "SubTodo is not found");
   }
 
-  const subTodo = await SubTodo.findById({
+  const subTodo = await SubTodo.findOne({
     _id: subTodoId,
     owner: req.user._id,
     todo: todoId,
@@ -191,9 +195,15 @@ const deleteSubTodo = asyncHandler(async (req, res) => {
 
   await SubTodo.findByIdAndDelete(subTodo._id);
 
+  await Todo.findByIdAndUpdate(todoId, {
+    $pull: {
+      subTodo: subTodoId,
+    },
+  });
+
   return res
     .status(200)
-    .json(new apiResponse(200, "SubTodo was deleted successfully"));
+    .json(new apiResponse(200, {}, "SubTodo was deleted successfully"));
 });
 
 const getSubTodoById = asyncHandler(async (req, res) => {

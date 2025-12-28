@@ -18,10 +18,12 @@ const userSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
     },
     password: {
       type: String,
       required: [true, "Password is required"],
+      minlength: [8, "Password must be at least 8 characters"],
     },
     fullName: {
       type: String,
@@ -43,11 +45,14 @@ const userSchema = new Schema(
 );
 
 //this is the encrypt the password before saving the password in database
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    return;
-  } else {
+    return next();
+  }
+  try {
     this.password = await bcrypt.hash(this.password, 10);
+  } catch (error) {
+    next(error);
   }
 });
 

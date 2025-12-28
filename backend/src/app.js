@@ -34,4 +34,25 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/todo", todoRouter);
 app.use("/api/v1/subTodo", subTodoRouter);
 
+/*import rateLimit from "express-rate-limit";
+
+// General rate limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: "Too many requests from this IP, please try again later",
+});
+
+// Strict limiter for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  skipSuccessfulRequests: true,
+  message: "Too many authentication attempts, please try again later",
+});
+
+app.use("/api/", limiter);
+app.use("/api/v1/users/login", authLimiter);
+app.use("/api/v1/users/register", authLimiter); */
+
 export { app };
