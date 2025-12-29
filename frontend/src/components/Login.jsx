@@ -4,16 +4,21 @@ import Input from "./Input.jsx";
 import Button from "./Button.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const { user, loading, error } = useSelector((state) => state.user);
+  const [loginError, setLoginError] = useState(null);
 
   const onSubmit = (data) => {
-    dispatch(loginUser(data));
+    try {
+      dispatch(loginUser(data));
+    } catch (error) {
+      setLoginError(error);
+    }
   };
 
   // Redirect after successful login
@@ -35,7 +40,7 @@ function Login() {
         {...register("password", { required: true })}
       />
 
-      {error && <p className="error">{error}</p>}
+      {loginError && <p>Please enter a valid username or password</p>}
 
       <Button type="submit" disabled={loading}>
         {loading ? "Logging in..." : "Login"}

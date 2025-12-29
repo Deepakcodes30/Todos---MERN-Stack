@@ -4,43 +4,48 @@ import Input from "./Input.jsx";
 import Button from "./Button.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function Signup() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { register, handleSubmit, reset } = useForm();
   const { user, loading, error } = useSelector((state) => state.user);
+  const [signupError, setSignupError] = useState(null);
 
   const onSubmit = (data) => {
-    if (data.password.length < 8) {
-      alert("Password must be at least 8 characters");
-      return;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      alert("Please enter a valid email");
-      return;
-    }
-
-    const formData = new FormData();
-
-    formData.append("fullName", data.fullName);
-    formData.append("email", data.email);
-    formData.append("username", data.username);
-    formData.append("password", data.password);
-
-    // avatar is an array (FileList)
-    if (data.avatar?.[0]) {
-      const file = data.avatar[0];
-      if (file.size > 2 * 1024 * 1024) {
-        alert("Avatar must be less than 2MB");
+    try {
+      if (data.password.length < 8) {
+        alert("Password must be at least 8 characters");
         return;
       }
-      formData.append("avatar", file);
-    }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(data.email)) {
+        alert("Please enter a valid email");
+        return;
+      }
 
-    dispatch(registerUser(formData));
+      const formData = new FormData();
+
+      formData.append("fullName", data.fullName);
+      formData.append("email", data.email);
+      formData.append("username", data.username);
+      formData.append("password", data.password);
+
+      // avatar is an array (FileList)
+      if (data.avatar?.[0]) {
+        const file = data.avatar[0];
+        if (file.size > 2 * 1024 * 1024) {
+          alert("Avatar must be less than 2MB");
+          return;
+        }
+        formData.append("avatar", file);
+      }
+
+      dispatch(registerUser(formData));
+    } catch (error) {
+      setSignupError(error);
+    }
   };
 
   useEffect(() => {
@@ -71,7 +76,7 @@ function Signup() {
           type="password"
           {...register("password", { required: true })}
         />
-        {error && <p className="error">{error}</p>}
+        {signupError && <p className="error">Please fill in all details</p>}
         <Button type="submit" disabled={loading}>
           {loading ? "Registering user..." : "Register"}
         </Button>
