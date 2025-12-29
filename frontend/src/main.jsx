@@ -9,6 +9,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Protected from "./components/AuthLayout.jsx";
+import Profile from "./pages/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -44,6 +45,14 @@ const router = createBrowserRouter([
         element: (
           <Protected authentication={false}>
             <Register />
+          </Protected>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <Protected authentication={true}>
+            <Profile />
           </Protected>
         ),
       },
