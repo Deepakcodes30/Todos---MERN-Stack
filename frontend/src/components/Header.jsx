@@ -17,16 +17,16 @@ const Header = () => {
   };*/
 
   return (
-    <div className="flex w-full space-x-2.5">
-      <div>Logo</div>
+    <div className="flex w-full align-middle bg-red-700 items-center justify-evenly h-12 text-white font-medium">
+      <div className="mr-45 ml-2 text-2xl">Todos</div>
 
       {!authStatus ? (
-        <div>
+        <div className="text-lg flex gap-2">
           <Link to="/login">Login</Link>
           <Link to="/register">Register</Link>
         </div>
       ) : (
-        <div>
+        <div className="text-md">
           <Link to="/profile">Profile</Link>
           <LogoutBtn />
         </div>

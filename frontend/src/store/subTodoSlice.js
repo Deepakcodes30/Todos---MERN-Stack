@@ -165,11 +165,11 @@ export const subTodoSlice = createSlice({
       })
       .addCase(createSubTodo.fulfilled, (state, action) => {
         state.loading = false;
-        const { todoId, subTodo } = action.payload;
-        if (!state.subTodos[todoId]) {
-          state.subTodos[todoId] = [];
-        }
-        state.subTodos.unshift(action.payload);
+        // const { todoId, subTodo } = action.payload;
+        // if (!state.subTodos[todoId]) {
+        //   state.subTodos[todoId] = [];
+        // }
+        state.subTodos.unshift(action.payload.subTodo);
       })
       .addCase(createSubTodo.rejected, (state, action) => {
         state.loading = false;

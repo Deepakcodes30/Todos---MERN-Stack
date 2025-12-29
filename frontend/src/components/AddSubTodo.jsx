@@ -40,8 +40,10 @@ const AddSubTodo = ({ todoId }) => {
   }, []);
 
   return (
-    <div ref={wrapperRef}>
+    <div ref={wrapperRef} className="flex">
       <input
+        className={`h-6 bg-gray-50 m-2 rounded-md pl-2 border outline-none transition-all duration-500
+          ${isFocused ? "w-80" : "w-100"}`}
         type="text"
         placeholder="Add a SubTodo.."
         value={content}
@@ -52,6 +54,7 @@ const AddSubTodo = ({ todoId }) => {
         <>
           <button
             type="button"
+            className="cursor-pointer"
             onClick={handleSubmit}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}>
             Add

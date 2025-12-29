@@ -16,7 +16,7 @@ function App() {
   }, [dispatch]);
 
   return !loading ? (
-    <div>
+    <div className="max-w-100 bg-white h-screen">
       <Header />
       <main>
         <Outlet />

@@ -8,7 +8,7 @@ const Input = React.forwardRef(function Input(
   return (
     <div>
       {label && <label htmlFor={id}>{label}</label>}
-      <input type={type} {...props} ref={ref} id={id} />
+      <input type={type} className={className} {...props} ref={ref} id={id} />
     </div>
   );
 });

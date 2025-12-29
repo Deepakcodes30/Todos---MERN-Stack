@@ -22,6 +22,7 @@ const SubTodo = ({ subTodo, todoId }) => {
   return (
     <div className="flex items-center gap-3">
       <input
+        className=""
         type="checkbox"
         checked={subTodo.isCompleted}
         onChange={() =>
@@ -31,12 +32,15 @@ const SubTodo = ({ subTodo, todoId }) => {
 
       {isEditing ? (
         <input
+          className="w-60 border shadow-md bg-blue-50 rounded-lg transition-all duration-300 pl-2 px-2"
           value={editedContent}
           onChange={(e) => setEditedContent(e.target.value)}
         />
       ) : (
         <span
-          className={subTodo.isCompleted ? "line-through text-gray-400" : ""}>
+          className={`w-65 ${
+            subTodo.isCompleted ? "line-through text-gray-400" : ""
+          }`}>
           {subTodo.content}
         </span>
       )}
@@ -44,14 +48,14 @@ const SubTodo = ({ subTodo, todoId }) => {
       {isEditing ? (
         <button onClick={handleSave}>Save</button>
       ) : (
-        <button onClick={() => setIsEditing(true)}>Edit</button>
+        <button onClick={() => setIsEditing(true)}>edit</button>
       )}
 
       <button
         onClick={() =>
           dispatch(deleteSubTodo({ todoId, subTodoId: subTodo._id }))
         }>
-        Delete
+        delete
       </button>
     </div>
   );

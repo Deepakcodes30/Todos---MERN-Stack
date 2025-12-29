@@ -36,8 +36,10 @@ const AddTodo = () => {
   }, []);
 
   return (
-    <div ref={wrapperRef}>
+    <div ref={wrapperRef} className="flex items-center gap-2 bg-white ">
       <input
+        className={`h-10 bg-gray-100 m-2 mb-0 shadow-md rounded-md pl-2 outline-none transition-all duration-500
+          ${isFocused ? "w-80" : "w-100"}`}
         type="text"
         placeholder="Add a Todo.."
         value={title}
@@ -49,7 +51,7 @@ const AddTodo = () => {
           <button
             type="button"
             onClick={() => inputDateRef.current?.showPicker()}
-            className="p-2 rounded-lg hover:bg-gray-100 transition"
+            className="p-2 h-10 rounded-lg hover:bg-emerald-500 transition cursor-pointer"
             title="Pick a Due Date">
             Due
           </button>
@@ -64,6 +66,7 @@ const AddTodo = () => {
 
           <button
             type="button"
+            className="cursor-pointer h-10 p-2 rounded-lg hover:bg-emerald-500"
             onClick={handleSubmit}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}>
             Add

@@ -14,6 +14,7 @@ function Signup() {
   const [signupError, setSignupError] = useState(null);
 
   const onSubmit = (data) => {
+    setSignupError(null);
     try {
       if (data.password.length < 8) {
         alert("Password must be at least 8 characters");
@@ -44,7 +45,7 @@ function Signup() {
 
       dispatch(registerUser(formData));
     } catch (error) {
-      setSignupError(error);
+      setSignupError(error || "Please enter all details");
     }
   };
 
@@ -56,35 +57,51 @@ function Signup() {
   }, [navigate, user]);
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Input label="FullName" {...register("fullName", { required: true })} />
+    <div className="flex flex-col justify-center items-center w-100">
+      <h1 className="text-2xl m-4">Signup</h1>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4 items-center">
         <Input
-          label="Email"
+          label="FullName:"
+          className="h-10 text-lg ml-4 bg-gray-100 w-70 rounded-lg shadow-md"
+          {...register("fullName", { required: true })}
+        />
+        <Input
+          label="Email:"
           type="email"
+          className="h-10 text-lg ml-11 bg-gray-100 w-70 rounded-lg shadow-md"
           {...register("email", { required: true })}
         />
-        <Input label="Username" {...register("username", { required: true })} />
         <Input
-          label="Avatar"
+          label="Username:"
+          className="h-10 text-lg ml-2 bg-gray-100 w-70 rounded-lg shadow-md"
+          {...register("username", { required: true })}
+        />
+        <Input
+          label="Avatar:"
           type="file"
           accept="image/*"
           {...register("avatar")}
         />
         <Input
-          label="Password"
+          label="Password:"
           type="password"
+          className="h-10 text-lg ml-2 bg-gray-100 w-70 rounded-lg shadow-md"
           {...register("password", { required: true })}
         />
         {signupError && <p className="error">Please fill in all details</p>}
-        <Button type="submit" disabled={loading}>
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-8 px-4 mx-auto flex items-center justify-center bg-blue-50 border-[0.1rem]">
           {loading ? "Registering user..." : "Register"}
         </Button>
         <p>
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </form>
-    </>
+    </div>
   );
 }
 

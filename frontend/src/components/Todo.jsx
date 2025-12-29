@@ -25,8 +25,8 @@ const Todo = ({ todo }) => {
   };
 
   return (
-    <>
-      <div>
+    <div className="bg-red-100 m-2 p-2 rounded-xl shadow-md">
+      <div className="flex gap-2 items-center align-middle">
         <input
           type="checkbox"
           checked={todo.isCompleted}
@@ -34,12 +34,16 @@ const Todo = ({ todo }) => {
         />
         {isEditing ? (
           <input
+            className="w-70 border shadow-md my-2 bg-blue-50 rounded-lg pl-2 py-1 transition-all duration-300"
             type="text"
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
           />
         ) : (
-          <div className={todo.isCompleted ? "line-through text-gray-400" : ""}>
+          <div
+            className={`text-lg ${todo.dueDate ? "w-48" : "w-68"} ${
+              todo.isCompleted ? "line-through text-gray-400" : ""
+            }`}>
             {todo.title}
           </div>
         )}
@@ -71,7 +75,10 @@ const Todo = ({ todo }) => {
         <button onClick={() => dispatch(deleteTodo(todo._id))}>Delete</button>
       </div>
       <AddSubTodo todoId={todo._id} />
-      <div>
+      <div
+        className={`bg-red-300 rounded-lg ${
+          todoSubTodos.length > 0 ? "p-2" : "p-0"
+        }`}>
         <ul>
           {todoSubTodos.map((subTodo) => {
             return (
@@ -82,7 +89,7 @@ const Todo = ({ todo }) => {
           })}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 
