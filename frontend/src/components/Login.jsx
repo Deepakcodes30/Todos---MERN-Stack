@@ -9,7 +9,11 @@ import { useEffect, useState } from "react";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { user, loading, error } = useSelector((state) => state.user);
   const [loginError, setLoginError] = useState(null);
 
@@ -55,7 +59,9 @@ function Login() {
           className="h-10 text-lg ml-3 bg-gray-100 w-70 rounded-lg shadow-md"
         />
 
-        {loginError && <p>Please enter a valid username or password</p>}
+        {(errors.email || errors.password) && (
+          <p>Please enter a valid username or password</p>
+        )}
 
         <Button
           className="h-8 px-4 mx-auto flex items-center justify-center bg-blue-50 border-[0.1rem]"
