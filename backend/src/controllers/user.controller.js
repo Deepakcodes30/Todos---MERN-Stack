@@ -211,17 +211,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       sameSite: "lax", // helps with cross-origin
     };
 
-    const { newRefreshToken, accessToken } =
-      await generateAccessAndRefreshToken(user._id);
+    const { refreshToken, accessToken } = await generateAccessAndRefreshToken(
+      user._id
+    );
 
     return res
       .status(200)
-      .cookie("refreshToken", newRefreshToken, options)
+      .cookie("refreshToken", refreshToken, options)
       .cookie("accessToken", accessToken, options)
       .json(
         new apiResponse(
           200,
-          { accessToken, newRefreshToken },
+          { accessToken, refreshToken },
           "Access Token refreshed successfully"
         )
       );
@@ -240,7 +241,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     throw new apiError(401, "Invalid Old Password");
   }
   user.password = newPassword;
-  await user.save({ validateBeforeSave: false });
+  await user.save();
 
   return res
     .status(200)
