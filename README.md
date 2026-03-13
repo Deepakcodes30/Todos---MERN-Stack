@@ -42,6 +42,8 @@ https://todos-mern-stack.vercel.app
 | Password Hashing  | Bcrypt       |
 | API Communication | REST API     |
 | Version Control   | Git & GitHub |
+| Image Storage     | Cloudinary   |
+| Deployment        | Vercel       |
 
 ---
 
