@@ -5,6 +5,16 @@ The application allows users to efficiently manage daily tasks by creating, upda
 
 ---
 
+## Live Demo
+
+Frontend:  
+https://todos-mern-stack-mocha.vercel.app
+
+Backend API:  
+https://todos-mern-stack.vercel.app
+
+---
+
 ## Features
 
 - Add new todo tasks
@@ -20,18 +30,18 @@ The application allows users to efficiently manage daily tasks by creating, upda
 
 ## Technologies Used
 
-| Layer | Technology |
-|------|-------------|
-| Frontend | React.js |
-| Styling | Tailwind CSS |
-| State Management | Redux |
-| Backend | Node.js |
-| Web Framework | Express.js |
-| Database | MongoDB |
-| Authentication | JWT |
-| Password Hashing | Bcrypt |
-| API Communication | REST API |
-| Version Control | Git & GitHub |
+| Layer             | Technology   |
+| ----------------- | ------------ |
+| Frontend          | React.js     |
+| Styling           | Tailwind CSS |
+| State Management  | Redux        |
+| Backend           | Node.js      |
+| Web Framework     | Express.js   |
+| Database          | MongoDB      |
+| Authentication    | JWT          |
+| Password Hashing  | Bcrypt       |
+| API Communication | REST API     |
+| Version Control   | Git & GitHub |
 
 ---
 
