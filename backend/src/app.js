@@ -6,7 +6,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://todos.vercel.app"],
+    origin: [
+      "http://localhost:5173",
+      "https://todos-mern-stack-mocha.vercel.app",
+    ],
     credentials: true,
   })
 );
