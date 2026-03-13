@@ -23,6 +23,8 @@ The application allows users to efficiently manage daily tasks by creating, upda
 | Layer | Technology |
 |------|-------------|
 | Frontend | React.js |
+| Styling | Tailwind CSS |
+| State Management | Redux |
 | Backend | Node.js |
 | Web Framework | Express.js |
 | Database | MongoDB |
