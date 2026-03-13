@@ -21,4 +21,8 @@ connectDB()
 
 await connectDB();
 
+app.get("/", (_, res) => {
+  res.send("Backend running");
+});
+
 export default app;
