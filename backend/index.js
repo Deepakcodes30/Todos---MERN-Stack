@@ -1,11 +1,13 @@
 import dotenv from "dotenv";
-import connectDB from "./db/index.js";
-import { app } from "./app.js";
+import connectDB from "./src/db/index.js";
+import { app } from "./src/app.js";
 
 dotenv.config({
   path: "./.env",
 });
 
+/*
+app.listen cannot be used while deploying as vercel is stateless
 connectDB()
   .then(() => {
     app.listen(process.env.PORT || 8000, () => {
@@ -15,3 +17,8 @@ connectDB()
   .catch((error) => {
     console.log("Mongo db connection failed !!!", error);
   });
+*/
+
+await connectDB();
+
+export default app;
